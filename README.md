@@ -9,7 +9,7 @@ Idea taken from [Awsomedude/easyDialog](https://github.com/Awsomedude/easyDialog
 - Protect crash server with unknown symbol
 - Protect dialog hide
 - Protect brutal response with raknet or native features
-- Protect listitem response inválida row
+- Protect listitem response invalid row
 
 # ⚠️ Notes
 - You can create custom callbacks for your dialogs, see the example below.
