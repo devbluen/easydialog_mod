@@ -41,6 +41,7 @@ Dialog_Show(playerid, CUSTOM_DIALOG, DIALOG_STYLE_PASSWORD, "Password", "Your pa
 
 # 📝 Functions
 - Dialog_Show or Dialog_Open
+- Dialog_Opened
 - Dialog_ReShow
 - Dialog_Close
 
