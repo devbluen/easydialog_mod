@@ -125,8 +125,13 @@ stock Dialog_Open(playerid, const function[], style, const caption[], const info
 	format(e_EasyDialog[playerid][E_EASY_DIALOG_NAME], 30 + 1, function);
 	strcat(string, info);
 
-	if(style == DIALOG_STYLE_TABLIST || style == DIALOG_STYLE_TABLIST_HEADERS)
-		e_EasyDialog[playerid][E_EASY_DIALOG_LISTITENS] = strcount_easy(info, "\n");
+	if(style == DIALOG_STYLE_TABLIST || style == DIALOG_STYLE_TABLIST_HEADERS) {
+		strcat(string, "\n");
+		e_EasyDialog[playerid][E_EASY_DIALOG_LISTITENS] = strcount_easy(string, "\n");
+		
+		if(strfind(string, "\n\n") != -1)
+			e_EasyDialog[playerid][E_EASY_DIALOG_LISTITENS]--;
+	}
 
 	/*
 		Configure for reopen dialog
