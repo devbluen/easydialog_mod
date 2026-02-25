@@ -27,11 +27,11 @@ static enum E_EASY_DIALOG {
 	bool:E_EASY_DIALOG_OPEN,
 	E_EASY_DIALOG_NAME[30],
 
-	E_EASY_DIALOG_CALL[(30 + 1) - 7],
+	E_EASY_DIALOG_CALL[30 + 1],
 	DIALOG_STYLE:E_EASY_DIALOG_TYPE,
 	E_EASY_DIALOG_LISTITENS,
-	E_EASY_DIALOG_CAPTION[64],
-	E_EASY_DIALOG_INFO[1024 * 4],
+	E_EASY_DIALOG_TITLE[64],
+	E_EASY_DIALOG_CAPTION[1024 * 4],
 	E_EASY_DIALOG_BUTTON1[30],
 	E_EASY_DIALOG_BUTTON2[30]
 };
@@ -69,19 +69,19 @@ stock Dialog_Close(playerid) {
 }
 
 stock Dialog_ReShow(playerid, const error[] = "*") {
-	Dialog_Open(playerid, e_EasyDialog[playerid][E_EASY_DIALOG_CALL], e_EasyDialog[playerid][E_EASY_DIALOG_TYPE], e_EasyDialog[playerid][E_EASY_DIALOG_CAPTION], e_EasyDialog[playerid][E_EASY_DIALOG_INFO], e_EasyDialog[playerid][E_EASY_DIALOG_BUTTON1], e_EasyDialog[playerid][E_EASY_DIALOG_BUTTON2], error);
+	Dialog_Open(playerid, e_EasyDialog[playerid][E_EASY_DIALOG_CALL], e_EasyDialog[playerid][E_EASY_DIALOG_TYPE], e_EasyDialog[playerid][E_EASY_DIALOG_TITLE], e_EasyDialog[playerid][E_EASY_DIALOG_CAPTION], e_EasyDialog[playerid][E_EASY_DIALOG_BUTTON1], e_EasyDialog[playerid][E_EASY_DIALOG_BUTTON2], error);
 	return true;
 }
 
-stock Dialog_Open(playerid, const function[], DIALOG_STYLE:style, const caption[], const info[], const button1[], const button2[], const error[] = "*") {
-	if(!strlen(info) || !IsPlayerConnected(playerid)) return false;
+stock Dialog_Open(playerid, const function[], DIALOG_STYLE:style, const title[], const caption[], const button1[], const button2[], const error[] = "*") {
+	if(!strlen(caption) || !IsPlayerConnected(playerid)) return false;
 
 	new string[4095 + 1];
 
 	e_EasyDialog[playerid][E_EASY_DIALOG_OPEN] = true;
 	e_EasyDialog[playerid][E_EASY_DIALOG_LISTITENS] = -1;
-	format(e_EasyDialog[playerid][E_EASY_DIALOG_NAME], (30 + 1) - 7, function);
-	strcat(string, info);
+	format(e_EasyDialog[playerid][E_EASY_DIALOG_NAME], 30 + 1, function);
+	strcat(string, caption);
 
 	if(style == DIALOG_STYLE_TABLIST || style == DIALOG_STYLE_TABLIST_HEADERS) {
 		strcat(string, "\n");
@@ -95,9 +95,9 @@ stock Dialog_Open(playerid, const function[], DIALOG_STYLE:style, const caption[
 		Configure for reopen dialog
 	*/
 
-	format(e_EasyDialog[playerid][E_EASY_DIALOG_CALL], (30 + 1) - 7, function);
-	format(e_EasyDialog[playerid][E_EASY_DIALOG_CAPTION], 64 + 1, caption);
-	format(e_EasyDialog[playerid][E_EASY_DIALOG_INFO], 1024 * 4, info);
+	format(e_EasyDialog[playerid][E_EASY_DIALOG_CALL], 30 + 1, function);
+	format(e_EasyDialog[playerid][E_EASY_DIALOG_TITLE], 64 + 1, title);
+	format(e_EasyDialog[playerid][E_EASY_DIALOG_CAPTION], 1024 * 4, caption);
 	format(e_EasyDialog[playerid][E_EASY_DIALOG_BUTTON1], 30 + 1, button1);
 	format(e_EasyDialog[playerid][E_EASY_DIALOG_BUTTON2], 30 + 1, button2);
 	e_EasyDialog[playerid][E_EASY_DIALOG_TYPE] = style;
@@ -106,16 +106,13 @@ stock Dialog_Open(playerid, const function[], DIALOG_STYLE:style, const caption[
 		strcat(string, va_return("\n\n{CD5C5C}ERRO: {C9C9C9}%s", error));
 
 	// Response
-	inline EASY_DIALOG(pid, dialogid, response, listitem, string:inputtext[]) {
+	inline const EASY_DIALOG(pid, dialogid, response, listitem, string:inputtext[]) {
 
-		#pragma unused pid, dialogid
+		#pragma unused dialogid
 
 		// Prevent possible problems
-		if(!Dialog_Opened(playerid))
-			return false;
-
-		if(isnull(e_EasyDialog[playerid][E_EASY_DIALOG_NAME]))
-			return false;
+		if(!Dialog_Opened(pid)) return false;
+		if(isnull(e_EasyDialog[pid][E_EASY_DIALOG_NAME])) return false;
 
 		// Fix crash server
 		for(new i = 0, l = strlen(inputtext); i < l; i ++) 
@@ -123,21 +120,22 @@ stock Dialog_Open(playerid, const function[], DIALOG_STYLE:style, const caption[
 				inputtext[i] = '#';
 		
 		// Protect listitem response
-		new listitem_protected = e_EasyDialog[playerid][E_EASY_DIALOG_LISTITENS];
+		new listitem_protected = e_EasyDialog[pid][E_EASY_DIALOG_LISTITENS];
 		if((listitem_protected != -1 && listitem != -1) && listitem >= listitem_protected) 
 			listitem = 0;
 
-		new easyDialog_String[(30 + 1) - 7];
+		new easyDialog_String[30 + 1];
 		strcat(easyDialog_String, "dialog_");
-		strcat(easyDialog_String, e_EasyDialog[playerid][E_EASY_DIALOG_NAME]);
+		strcat(easyDialog_String, e_EasyDialog[pid][E_EASY_DIALOG_NAME]);
 
-		stringclear(e_EasyDialog[playerid][E_EASY_DIALOG_NAME]);
-		e_EasyDialog[playerid][E_EASY_DIALOG_OPEN] = false;
+		stringclear(e_EasyDialog[pid][E_EASY_DIALOG_NAME]);
+		e_EasyDialog[pid][E_EASY_DIALOG_OPEN] = false;
 
-		CallLocalFunction(easyDialog_String, "ddds", playerid, response, listitem, (isnull(inputtext)) ? ("\1") : (inputtext));
+		print(easyDialog_String);
+		CallLocalFunction(easyDialog_String, "ddds", pid, response, listitem, (isnull(inputtext)) ? ("\1") : (inputtext));
 	}
 
-	Dialog_ShowCallback(playerid, using inline EASY_DIALOG, style, caption, string, button1, button2);
+	Dialog_ShowCallback(playerid, using inline EASY_DIALOG, style, title, string, button1, button2);
 	return true;
 }
 
