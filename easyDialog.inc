@@ -131,7 +131,6 @@ stock Dialog_Open(playerid, const function[], DIALOG_STYLE:style, const title[],
 		stringclear(e_EasyDialog[pid][E_EASY_DIALOG_NAME]);
 		e_EasyDialog[pid][E_EASY_DIALOG_OPEN] = false;
 
-		print(easyDialog_String);
 		CallLocalFunction(easyDialog_String, "ddds", pid, response, listitem, (isnull(inputtext)) ? ("\1") : (inputtext));
 	}
 
@@ -150,3 +149,4 @@ static stock strcount_easy(const string[], const sub[], bool:ignorecase = false,
 	
 	return count;
 }
+
