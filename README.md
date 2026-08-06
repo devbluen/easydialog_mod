@@ -6,10 +6,10 @@ Idea taken from [Awsomedude/easyDialog](https://github.com/Awsomedude/easyDialog
 - [Library YSI](https://github.com/pawn-lang/YSI-Includes)
 
 # 🫧 Protections
-- Protect crash server with unknown symbol
-- Protect dialog hide
-- Protect brutal response with raknet or native features
-- Protect listitem response invalid row
+- Protects input against malicious characters.
+- Protects the dialog response entirely on the server side.
+- Protects against invalid listitem responses from the client.
+- Protects the player from using a hidden dialog.
 
 # ⚠️ Notes
 - You can create custom callbacks for your dialogs, see the example below.
@@ -40,10 +40,11 @@ Dialog_Show(playerid, CUSTOM_DIALOG, DIALOG_STYLE_PASSWORD, "Password", "Your pa
 ```
 
 # 📝 Functions
-- Dialog_Show or Dialog_Open
-- Dialog_Opened
-- Dialog_ReShow
-- Dialog_Close
+- Dialog_Create(playerid, const callback[], DIALOG_STYLE:style, const title[], body[], const button1[], const button2[], {Float, _}:...);
+- Dialog_Show(playerid, const callback[], DIALOG_STYLE:style, const title[], body[], const button1[], const button2[], {Float, _}:...);     // Same Dialog_Open
+- Dialog_Close(playerid);
+- Dialog_ReShow(playerid, const error[] = "");     // Reopen the same dialog with additional message or not
+- bool:Dialog_Created(playerid);
 
 # 👋🏼 Credits
 Even though I wrote the code completely, the initial idea is entirely Awsomedude, I just made the system more "gourmet" and added new protections.
