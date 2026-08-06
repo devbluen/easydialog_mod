@@ -1,4 +1,4 @@
-# 🌍 Easy Dialog MOD
+# 🌍 easyDialog
 This is the modified easyDialog with some perks and new protections. An original modification by Awsomedude.
 Idea taken from [Awsomedude/easyDialog](https://github.com/Awsomedude/easyDialog), I just made other modifications and new additions.
 
