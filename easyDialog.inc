@@ -33,6 +33,7 @@
 
 			// Includes
 #include <YSI_Coding\y_hooks>
+#include <YSI_Coding\y_inline>
 #include <YSI_Coding\y_va>
 
 static enum E_DIALOG {
